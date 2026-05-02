@@ -10,19 +10,31 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: black;
+            background: #000;
             height: 100vh;
             width: 100vw;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            font-family: 'Courier New', monospace;
         }
-        #hint {
+        #start-screen {
+            text-align: center;
+            z-index: 10;
+        }
+        #start-btn {
+            background: transparent;
             color: #1a1a1a;
+            border: 1px solid #1a1a1a;
+            padding: 12px 36px;
             font-family: 'Courier New', monospace;
             font-size: 14px;
-            z-index: 10;
+            letter-spacing: 6px;
+            cursor: pointer;
+            background: none;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
             user-select: none;
         }
         #screamer-container {
@@ -38,69 +50,37 @@
         }
         @keyframes shake {
             0% { transform: translate(0,0); }
-            25% { transform: translate(-5px,5px); }
-            50% { transform: translate(5px,-5px); }
-            75% { transform: translate(-5px,-5px); }
-            100% { transform: translate(5px,5px); }
+            25% { transform: translate(-6px,6px); }
+            50% { transform: translate(6px,-6px); }
+            75% { transform: translate(-6px,-6px); }
+            100% { transform: translate(6px,6px); }
         }
     </style>
 </head>
 <body>
 
-    <div id="hint">●</div>
-    <div id="screamer-container"><img src="crazy_cat.png" alt=""></div>
+    <div id="start-screen">
+        <button id="start-btn">В О Й Т И</button>
+    </div>
+
+    <div id="screamer-container">
+        <img src="crazy_cat.png" alt="">
+    </div>
+
+    <audio id="scream" src="848191_miniiteayetagain_scream.mp3" preload="auto"></audio>
 
     <script>
-        var hint = document.getElementById('hint');
+        var startScreen = document.getElementById('start-screen');
         var screamerContainer = document.getElementById('screamer-container');
-        var isActivated = false;
+        var screamAudio = document.getElementById('scream');
+        var startBtn = document.getElementById('start-btn');
 
-        // === Web Audio API ===
-        var audioContext = null;
-        var audioBuffer = null;
-
-        // Заранее загружаем звук в буфер
-        function loadAudio(url) {
-            var request = new XMLHttpRequest();
-            request.open('GET', url, true);
-            request.responseType = 'arraybuffer';
-
-            request.onload = function() {
-                // Создаём аудиоконтекст только после взаимодействия
-                // Но здесь мы только сохраняем данные
-                var tempContext = new (window.AudioContext || window.webkitAudioContext)();
-                tempContext.decodeAudioData(request.response, function(buffer) {
-                    audioBuffer = buffer;
-                    tempContext.close();
-                });
-            };
-            request.send();
-        }
-
-        loadAudio('848191_miniiteayetagain_scream.mp3');
-
-        function activateScreamer() {
-            if (isActivated) return;
-            isActivated = true;
-
-            // Создаём аудиоконтекст в ответ на касание (это важно)
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-            // Воспроизводим звук из буфера
-            if (audioBuffer) {
-                var source = audioContext.createBufferSource();
-                source.buffer = audioBuffer;
-                source.connect(audioContext.destination);
-                source.start(0);
-            }
-
-            // Показываем скример
-            hint.style.display = 'none';
+        startBtn.addEventListener('click', function(event) {
+            event.stopPropagation();
+            startScreen.style.display = 'none';
             screamerContainer.style.display = 'block';
-        }
-
-        document.body.addEventListener('click', activateScreamer);
-        document.body.addEventListener('touchstart', activateScreamer);
+            screamAudio.play();
+        });
     </script>
 </body>
 </html>
