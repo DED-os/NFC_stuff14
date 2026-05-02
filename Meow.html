@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: black;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            animation: shake 0.1s infinite;
+        }
+        @keyframes shake {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-3px, 3px); }
+            50% { transform: translate(3px, -3px); }
+            75% { transform: translate(-3px, -3px); }
+            100% { transform: translate(3px, 3px); }
+        }
+    </style>
+</head>
+<body>
+    <img src="scary.jpg" alt="">
+
+    <audio id="scream" src="звук.mp3" preload="auto"></audio>
+
+    <script>
+        window.onload = function() {
+            var audio = document.getElementById('scream');
+            audio.play().catch(function() {
+                // Если автозапуск заблокирован — добавим кнопку
+                var btn = document.createElement('button');
+                btn.innerText = 'НАЖМИ';
+                btn.style.cssText = 'position:absolute; z-index:10; bottom:30px; left:50%; transform:translateX(-50%); padding:20px 50px; font-size:24px; background:red; color:white; border:none; border-radius:50px; cursor:pointer;';
+                btn.onclick = function() { audio.play(); btn.remove(); };
+                document.body.appendChild(btn);
+            });
+        };
+    </script>
+</body>
+</html>
