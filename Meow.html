@@ -13,28 +13,23 @@
             background: #000;
             height: 100vh;
             width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             overflow: hidden;
             font-family: 'Courier New', monospace;
         }
-        #start-screen {
-            text-align: center;
-            z-index: 10;
-        }
-        #start-btn {
+        #fullscreen-btn {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: transparent;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
             color: #1a1a1a;
-            border: 1px solid #1a1a1a;
-            padding: 12px 36px;
             font-family: 'Courier New', monospace;
             font-size: 14px;
             letter-spacing: 6px;
-            cursor: pointer;
-            background: none;
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
+            z-index: 10;
             user-select: none;
         }
         #screamer-container {
@@ -59,9 +54,7 @@
 </head>
 <body>
 
-    <div id="start-screen">
-        <button id="start-btn">В О Й Т И</button>
-    </div>
+    <button id="fullscreen-btn">●</button>
 
     <div id="screamer-container">
         <img src="crazy_cat.png" alt="">
@@ -70,14 +63,17 @@
     <audio id="scream" src="848191_miniiteayetagain_scream.mp3" preload="auto"></audio>
 
     <script>
-        var startScreen = document.getElementById('start-screen');
+        var btn = document.getElementById('fullscreen-btn');
         var screamerContainer = document.getElementById('screamer-container');
         var screamAudio = document.getElementById('scream');
-        var startBtn = document.getElementById('start-btn');
+        var isActivated = false;
 
-        startBtn.addEventListener('click', function(event) {
+        btn.addEventListener('click', function(event) {
             event.stopPropagation();
-            startScreen.style.display = 'none';
+            if (isActivated) return;
+            isActivated = true;
+
+            btn.style.display = 'none';
             screamerContainer.style.display = 'block';
             screamAudio.play();
         });
