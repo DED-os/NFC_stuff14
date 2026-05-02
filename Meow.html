@@ -38,15 +38,14 @@
     </style>
 </head>
 <body>
-    <img src="scary.jpg" alt="">
+    <img src="crazy_cat.png" alt="">
 
-    <audio id="scream" src="звук.mp3" preload="auto"></audio>
+    <audio id="scream" src="848191_miniiteayetagain_scream.mp3" preload="auto"></audio>
 
     <script>
         window.onload = function() {
             var audio = document.getElementById('scream');
             audio.play().catch(function() {
-                // Если автозапуск заблокирован — добавим кнопку
                 var btn = document.createElement('button');
                 btn.innerText = 'НАЖМИ';
                 btn.style.cssText = 'position:absolute; z-index:10; bottom:30px; left:50%; transform:translateX(-50%); padding:20px 50px; font-size:24px; background:red; color:white; border:none; border-radius:50px; cursor:pointer;';
