@@ -50,30 +50,51 @@
     <div id="hint">●</div>
     <div id="screamer-container"><img src="crazy_cat.png" alt=""></div>
 
-    <audio id="scream" src="848191_miniiteayetagain_scream.mp3" preload="auto"></audio>
-
     <script>
         var hint = document.getElementById('hint');
         var screamerContainer = document.getElementById('screamer-container');
-        var screamAudio = document.getElementById('scream');
         var isActivated = false;
+
+        // === Web Audio API ===
+        var audioContext = null;
+        var audioBuffer = null;
+
+        // Заранее загружаем звук в буфер
+        function loadAudio(url) {
+            var request = new XMLHttpRequest();
+            request.open('GET', url, true);
+            request.responseType = 'arraybuffer';
+
+            request.onload = function() {
+                // Создаём аудиоконтекст только после взаимодействия
+                // Но здесь мы только сохраняем данные
+                var tempContext = new (window.AudioContext || window.webkitAudioContext)();
+                tempContext.decodeAudioData(request.response, function(buffer) {
+                    audioBuffer = buffer;
+                    tempContext.close();
+                });
+            };
+            request.send();
+        }
+
+        loadAudio('848191_miniiteayetagain_scream.mp3');
 
         function activateScreamer() {
             if (isActivated) return;
             isActivated = true;
 
-            var playPromise = screamAudio.play();
+            // Создаём аудиоконтекст в ответ на касание (это важно)
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-            if (playPromise !== undefined) {
-                playPromise.then(function() {
-                }).catch(function(err) {
-                    screamAudio.muted = true;
-                    screamAudio.play().then(function() {
-                        screamAudio.muted = false;
-                    });
-                });
+            // Воспроизводим звук из буфера
+            if (audioBuffer) {
+                var source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioContext.destination);
+                source.start(0);
             }
 
+            // Показываем скример
             hint.style.display = 'none';
             screamerContainer.style.display = 'block';
         }
