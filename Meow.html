@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    
     <title>.</title>
     <style>
         * {
@@ -25,13 +23,12 @@
             overflow: hidden;
             cursor: pointer;
         }
-        #trigger {
-            color: #333;
-            font-family: Arial, sans-serif;
+        #hint {
+            color: #222;
+            font-family: 'Courier New', monospace;
             font-size: 14px;
-            text-align: center;
-            z-index: 10;
             user-select: none;
+            z-index: 10;
         }
         #screamer-container {
             display: none;
@@ -45,7 +42,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            animation: shake 0.1s infinite;
+            animation: shake 0.08s infinite;
         }
         @keyframes shake {
             0% { transform: translate(0, 0); }
@@ -57,7 +54,8 @@
     </style>
 </head>
 <body>
-    <div id="trigger">●</div>
+
+    <div id="hint">●</div>
 
     <div id="screamer-container">
         <img src="crazy_cat.png" alt="">
@@ -66,22 +64,25 @@
     <audio id="scream" src="848191_miniiteayetagain_scream.mp3" preload="auto"></audio>
 
     <script>
-        var triggered = false;
-        var body = document.body;
-        var triggerDiv = document.getElementById('trigger');
-        var screamerDiv = document.getElementById('screamer-container');
-        var audio = document.getElementById('scream');
+        var hint = document.getElementById('hint');
+        var screamerContainer = document.getElementById('screamer-container');
+        var screamAudio = document.getElementById('scream');
+        var isActivated = false;
 
-        function activate() {
-            if (triggered) return;
-            triggered = true;
+        function activateScreamer() {
+            if (isActivated) return;
+            isActivated = true;
 
-            triggerDiv.style.display = 'none';
-            screamerDiv.style.display = 'block';
-            audio.play();
+            hint.style.display = 'none';
+            screamerContainer.style.display = 'block';
+
+            screamAudio.play().catch(function(err) {
+                console.log('Sound error:', err);
+            });
         }
-        body.addEventListener('click', activate);
-        body.addEventListener('touchstart', activate);
+
+        document.body.addEventListener('click', activateScreamer);
+        document.body.addEventListener('touchstart', activateScreamer);
     </script>
 </body>
 </html>
